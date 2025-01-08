@@ -9,6 +9,7 @@ This repo is to be locally hosted, so no resources are needed other than the loc
 ## Pre-requisites
 
 1. `docker` and `docker compose`
+
 Note:`docker-compose` is an older version and `docker compose` is preferred. Please refer to official documentation to install it in local machine.
 
 2. kubectl Portforwarding permissions
@@ -16,6 +17,7 @@ Note:`docker-compose` is an older version and `docker compose` is preferred. Ple
 ## Set-up
 
 - `cd vector-admin`
+- `git checkout verloop` (Make sure to be in verloop branch)
 - `cd docker/`
 - `cp .env.example .env`.
 - Edit `.env` file and update the variables. **please** update all of the following:
@@ -30,28 +32,39 @@ This means that first if we have a local postgres instance running, we need to m
 How to check in linux?
 
 - `sudo lsof -i :5432`
+
 If you see a result popping up, then run the following:
+
 - `sudo service postgresql stop`
+
 Note: You would have to stop local postgres like this every time you restart your machine, before running the commands below.
 
 **Run containerized Postgres DB**
 
 Run this command first to get a dockerized Postgres container running:
+
 - `sudo docker compose up -d --build postgres`
+
 Note: You may not need `sudo`
 
 **Build vector-admin docker image from source**
 
 Run this command:
+
 - `sudo docker compose up -d --build vector-admin`
+
 Note: The first time building may take some time.
 
 In another terminal window, run the following to use the dev env:
+
 - `kubectl config use-context dev`
 
 Then, run weaviate port-forwarding in the same window:
+
 - `kubectl port-forward --namespace weaviate weaviate-0 8080:8080`
+
 Note: Make sure you have relevant permissions
+
 
 Now, if you open your browser window and go to "http://localhost:3001" you should be greeted by vector-admin landing page.
 You can set up your workspace as "verloop" and in the page where you are supposed to connect your vector database, make sure to enter:
@@ -70,6 +83,8 @@ Once we are done using vector-admin, we can stop port-forwarding window by `CTRL
 - `cd docker/`
 
 **Stop containerized Postgres DB**
+
 Running this command stops both the vector-admin and docker containers gracefully:
+
 - `sudo docker compose down -v postgres`
 
