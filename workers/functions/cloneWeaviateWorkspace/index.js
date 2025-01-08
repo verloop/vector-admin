@@ -34,7 +34,7 @@ const cloneWeaviateWorkspace = InngestClient.createFunction(
     try {
       const weaviateClient = new Weaviate(connector);
       const { client } = await weaviateClient.connect();
-      const className = weaviateClient.camelCase(clonedWorkspace.fname);
+      const className = clonedWorkspace.fname;
       await client.schema
         .classCreator()
         .withClass({

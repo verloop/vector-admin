@@ -5,3 +5,4 @@ logs/server.log
 *.sqbpro
 node_modules
 storage/vector-cache/*.json
+data/*

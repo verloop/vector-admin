@@ -97,7 +97,7 @@ const newWorkspaceCreated = InngestClient.createFunction(
     if (connector.type === 'weaviate') {
       try {
         const weaviateClient = new Weaviate(connector);
-        const className = weaviateClient.camelCase(workspace.fname);
+        const className = workspace.fname;
         const { client } = await weaviateClient.connect();
         const collectionCreated = await client.schema
           .classCreator()

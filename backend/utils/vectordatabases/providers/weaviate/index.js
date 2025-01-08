@@ -49,13 +49,13 @@ class Weaviate {
     const { client } = await this.connect();
     const response = await client.graphql
       .get()
-      .withClassName(this.camelCase(namespace))
+      .withClassName(namespace)
       .withLimit(1)
       .withFields("_additional { vector }")
       .do();
 
     return Number(
-      response?.data?.Get?.[this.camelCase(namespace)]?.[0]?._additional?.vector
+      response?.data?.Get?.[namespace]?.[0]?._additional?.vector
         ?.length || 0
     );
   }
@@ -107,12 +107,12 @@ class Weaviate {
       const { client } = await this.connect();
       const response = await client.graphql
         .aggregate()
-        .withClassName(this.camelCase(namespace))
+        .withClassName(namespace)
         .withFields("meta { count }")
         .do();
 
       return (
-        response?.data?.Aggregate?.[this.camelCase(namespace)]?.[0]?.meta
+        response?.data?.Aggregate?.[namespace]?.[0]?.meta
           ?.count || 0
       );
     } catch (e) {
@@ -123,7 +123,7 @@ class Weaviate {
 
   async namespaceCountWithClient(client, namespace = null) {
     try {
-      const className = this.camelCase(namespace);
+      const className = namespace;
       const response = await client.graphql
         .aggregate()
         .withClassName(className)
@@ -140,13 +140,13 @@ class Weaviate {
   async namespaceExists(_client, namespace = null) {
     if (!namespace) throw new Error("No namespace value provided.");
     const weaviateClasses = await this.namespaces();
-    return weaviateClasses.includes(this.camelCase(namespace));
+    return weaviateClasses.includes(namespace);
   }
 
   async namespace(name = null) {
     if (!name) throw new Error("No namespace value provided.");
     const { client } = await this.connect();
-    const className = this.camelCase(name);
+    const className = name;
     try {
       const weaviateClass = await client.schema
         .classGetter()
@@ -173,7 +173,7 @@ class Weaviate {
 
   async namespaceWithClient(client, name = null) {
     if (!name) throw new Error("No namespace value provided.");
-    const className = this.camelCase(name);
+    const className = name;
     const response = await client.graphql
       .aggregate()
       .withClassName(className)
@@ -237,7 +237,7 @@ class Weaviate {
   async schemaForCollection(namespace) {
     if (!namespace) throw new Error("No namespace value provided.");
     const { client } = await this.connect();
-    const className = await this.camelCase(namespace);
+    const className = await namespace;
     const weaviateClass = await client.schema
       .classGetter()
       .withClassName(className)
@@ -309,7 +309,7 @@ class Weaviate {
   // API.
   async processDocument(namespace, documentData, embedderApiKey, dbDocument) {
     try {
-      const className = this.camelCase(namespace);
+      const className = namespace;
       const openai = new OpenAi(embedderApiKey);
       const { pageContent, id, ...metadata } = documentData;
       const textSplitter = new RecursiveCharacterTextSplitter({
@@ -380,7 +380,7 @@ class Weaviate {
 
   async similarityResponse(namespace, queryVector, topK = 4) {
     const { client } = await this.connect();
-    const className = this.camelCase(namespace);
+    const className = namespace;
     const result = {
       vectorIds: [],
       contextTexts: [],
@@ -419,7 +419,7 @@ class Weaviate {
 
   async getMetadata(namespace = "", vectorIds = []) {
     const { client } = await this.connect();
-    const className = this.camelCase(namespace);
+    const className = namespace;
     const fieldsForCollection = await this.fieldNamesForCollection(namespace);
     const queryString = `${fieldsForCollection.join(" ")} _additional { id }`;
     const response = await client.graphql

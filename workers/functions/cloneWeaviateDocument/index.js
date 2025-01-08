@@ -53,7 +53,7 @@ const cloneWeaviateDocument = InngestClient.createFunction(
       const newCacheInfo = [];
       const weaviateClient = new Weaviate(connector);
       const { client } = await weaviateClient.connect();
-      const className = weaviateClient.camelCase(destinationWs.fname);
+      const className = destinationWs.fname;
 
       for (const chunks of toChunks(cacheInfo.chunks, 500)) {
         const weaviateVectors = [];

@@ -165,7 +165,7 @@ const deleteWeaviateDocument = InngestClient.createFunction(
     try {
       const weaviateClient = new Weaviate(connector);
       const { client } = await weaviateClient.connect();
-      const className = weaviateClient.camelCase(workspace.fname);
+      const className = workspace.fname;
       const hasNamespace = await weaviateClient.namespaceExists(
         client,
         workspace.fname

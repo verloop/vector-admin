@@ -144,7 +144,7 @@ const workspaceDeleted = InngestClient.createFunction(
       try {
         const weaviateClient = new Weaviate(connector);
         const { client } = await weaviateClient.connect();
-        const targetClassName = weaviateClient.camelCase(workspace.fname);
+        const targetClassName = workspace.fname;
         const collection = await weaviateClient.namespaceExists(
           client,
           targetClassName

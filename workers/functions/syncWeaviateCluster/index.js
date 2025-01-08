@@ -121,10 +121,10 @@ async function paginateAndStore(
   var offset = null;
   const files = {};
   const { client } = await weaviateClient.connect();
-  const fieldNames = await weaviateClient.fieldNamesForCollection(
-    collection.name
-  );
-  const queryString = `${fieldNames.join(' ')} _additional { id vector }`;
+  // const fieldNames = await weaviateClient.fieldNamesForCollection(
+  //   collection.name
+  // );
+  const queryString = `text ref_doc_id node_info relationships weaviate_doc_id tags document_id doc_id _additional { id vector } _additional { id vector }`;
 
   while (syncing) {
     var query = client.graphql
@@ -154,15 +154,13 @@ async function paginateAndStore(
       data.ids.push(_additional.id);
       data.embeddings.push(_additional.vector);
       data.metadatas.push(metadata);
-      data.documents.push(metadata?.text ?? '');
+      data.documents.push(metadata.text);
     });
 
     const { ids, metadatas, embeddings, documents } = data;
     for (let i = 0; i < ids.length; i++) {
       const documentName =
-        metadatas[i]?.title ||
-        metadatas[i]?.name ||
-        `imported-document-${v4()}.txt`;
+        metadatas[i].weaviate_doc_id;
       if (!files.hasOwnProperty(documentName)) {
         files[documentName] = {
           currentLine: 0,
@@ -198,7 +196,7 @@ async function paginateAndStore(
     offset = objects[objects.length - 1]._additional.id;
   }
 
-  console.log('Creating Workspace Documents & Document Vectors');
+  console.log('Creating Workspace Documents & Document Vectors:',workspace.id);
   await createDocuments(files, workspace, organization);
   await createDocumentVectors(files);
 

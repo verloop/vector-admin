@@ -244,7 +244,7 @@ async function namespaceExists(vectorDBClient, namespace) {
 
   if (vectorDBClient.name === 'weaviate') {
     try {
-      const className = vectorDBClient.camelCase(namespace);
+      const className = namespace;
       return await vectorDBClient.namespaceExists(null, className);
     } catch (e) {
       return null;
@@ -285,7 +285,7 @@ async function createVectorSpace(vectorDBClient, namespace) {
 
   if (vectorDBClient.name === 'weaviate') {
     try {
-      const className = vectorDBClient.camelCase(namespace);
+      const className = namespace;
       const { client } = await vectorDBClient.connect();
       const collectionCreated = await client.schema
         .classCreator()
